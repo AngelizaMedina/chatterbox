@@ -30,7 +30,8 @@
 			<img src="/assets/images/catter.svg" alt="Chatterbox logo" class="siteBrand__logo">
 			Chatterbox
 		</a>
-		<button id="installPWAButton" aria-label="Install" hidden><i class="fas fa-download downloadIcon"></i> Install</button>
+		<button id="installPWAButton" aria-label="Install" hidden><i class="fas fa-download downloadIcon icon"></i> Install</button>
+		<button id="notificationButton" hidden><i class="fas fa-bell"></i></button>
 	</nav>
 
 	<article class="mainChatView">
@@ -51,7 +52,8 @@
 	</article>
 
 	<script src="/socket.io/socket.io.js"></script>
-	<script>
+
+	<script type="module">
 		var socket = io();
 		var sound = new Audio("/assets/media/recieve.mp3");
 		var chatButton = document.getElementsByClassName("chatMessage__button")[0];
@@ -60,6 +62,8 @@
 		var joinForm = document.getElementsByClassName("chatMessage__form")[1];
 		var username = document.getElementsByClassName("chatMessage__username")[0];
 		var user;
+
+		import { displayNotification } from '/assets/scripts/pushNotification.js';
 
 		joinForm.addEventListener("submit", function(e){
 			e.preventDefault();
@@ -107,6 +111,11 @@
 		socket.on("message", function(msg){
 			console.log(msg);
 
+
+			if(document.visibilityState == "hidden"){
+				displayNotification(msg.msg); // NOT WORKING RIGHT NOW (Export your function first (I think)) `${username.name}`
+			}
+
 			let p = document.createElement("p");
 			p.className = "mainChatView__other";
 
@@ -130,10 +139,15 @@
 			chatView.scrollTop = chatView.scrollHeight;
 		});
 
-		socket.on("userjoin", function(msg){
+		socket.on("userjoin", function(username){
+
+			if(document.visibilityState == "hidden"){
+				displayNotification(`${username} has joined the chat`);
+			}
+
 			let small = document.createElement("small");
 			small.className = "timestamp center";
-			small.innerText = `${msg} has joined the chat`;
+			small.innerText = `${username} has joined the chat`;
 
 			let chatView = document.getElementsByClassName("mainChatView")[0];
 
@@ -157,6 +171,7 @@
 						});
       });
     }
-  </script>
+	</script>
+
 </body>
 </html>

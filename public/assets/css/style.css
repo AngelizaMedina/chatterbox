@@ -110,13 +110,10 @@ body {
 	pointer-events: none;
 }
 
-#installPWAButton{
+#installPWAButton, #notificationButton{
+	cursor: pointer;
 	border: none;
 	background-color: hsla(210, 50%, 50%);
 	color: rgb(35, 69, 104);
-}
-
-.downloadIcon{
-	color: rgb(35, 69, 104);
-	font-size: 1.8em;
+	font-size: 1.8rem;
 }
